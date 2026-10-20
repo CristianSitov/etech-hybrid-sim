@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E-Tech hybrid simulator</title>
+<meta name="description" content="Interactive, unofficial model of the Renault full hybrid E-Tech powertrain: combustion engine, main e-motor, HSG and clutchless dog-clutch gearbox.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main>
+<h1>E-Tech hybrid simulator</h1>
+<p class="lede">An interactive, unofficial model of how Renault's full hybrid E-Tech combines a combustion engine, two electric motors and a clutchless dog-clutch gearbox. You drive with the accelerator, brake and regen paddles. The energy manager decides the mode and gear, and the HSG matches the engine's shaft speed before each dog clutch drops in.</p>
+
+<section class="sim" aria-label="Simulator">
+<h2 class="sr-only">Driving simulator: accelerator, brake and regen paddles drive an automatic energy manager, shown on a powertrain schematic, speedometer, tachometer and dog clutch close-up.</h2>
+<svg id="sv" viewBox="0 0 680 605" role="img"><title>E-Tech hybrid drive simulator</title><desc>Powertrain schematic with live energy flows, plus speed and engine gauges and a dog clutch close-up.</desc>
+<defs><clipPath id="cw"><rect x="370" y="440" width="270" height="100" rx="8"/></clipPath></defs>
+<g id="main">
+<rect x="215" y="100" width="265" height="275" rx="12" fill="none" stroke="var(--b)" stroke-width="0.8" stroke-dasharray="5 4"/>
+<text class="ts" x="347" y="116" text-anchor="middle">Dogbox</text>
+<path d="M300 40 L20 40 L20 330 L40 330" fill="none" stroke="var(--b)" stroke-width="2"/>
+<path d="M300 58 L200 58 L200 75" fill="none" stroke="var(--b)" stroke-width="2"/>
+<path id="fBE" class="fl off" d="M300 40 L20 40 L20 330 L40 330" fill="none" stroke="#1D9E75" stroke-width="2.5"/>
+<path id="fBH" class="fl off" d="M300 58 L200 58 L200 75" fill="none" stroke="#1D9E75" stroke-width="2.5"/>
+<line x1="160" y1="150" x2="470" y2="150" stroke="var(--b)" stroke-width="4"/>
+<line x1="200" y1="115" x2="200" y2="150" stroke="var(--b)" stroke-width="4"/>
+<line x1="160" y1="330" x2="470" y2="330" stroke="var(--b)" stroke-width="4"/>
+<line x1="225" y1="240" x2="596" y2="240" stroke="var(--b)" stroke-width="4"/>
+<path id="fI" d="M160 150 L470 150 M200 150 L200 115" fill="none" stroke="#D85A30" stroke-width="2.5" stroke-dasharray="6 6" opacity="0"/>
+<path id="fE" class="fl off" d="M160 330 L470 330" fill="none" stroke="#1D9E75" stroke-width="2.5"/>
+<path id="fOc" class="fl off" d="M225 236 L596 236" fill="none" stroke="#D85A30" stroke-width="2.5"/>
+<path id="fOt" class="fl off" d="M225 244 L596 244" fill="none" stroke="#1D9E75" stroke-width="2.5"/>
+<g class="gr" data-k="o" data-cx="280" data-cy="240"><circle cx="280" cy="240" r="54" fill="var(--bg2)" stroke="var(--t)" stroke-width="5" stroke-dasharray="5 4"/><line x1="280" y1="190" x2="280" y2="290" stroke="var(--t)" stroke-width="1"/><circle cx="280" cy="240" r="6" fill="var(--t)"/></g>
+<g class="gr" data-k="o" data-cx="400" data-cy="240"><circle cx="400" cy="240" r="54" fill="var(--bg2)" stroke="var(--t)" stroke-width="5" stroke-dasharray="5 4"/><line x1="350" y1="240" x2="450" y2="240" stroke="var(--t)" stroke-width="1"/><circle cx="400" cy="240" r="6" fill="var(--t)"/></g>
+<g class="gr" data-k="a" data-cx="280" data-cy="150"><circle cx="280" cy="150" r="27" fill="var(--bg2)" stroke="var(--t)" stroke-width="5" stroke-dasharray="4 3.2"/><line x1="280" y1="126" x2="280" y2="174" stroke="var(--t)" stroke-width="1"/></g>
+<g class="gr" data-k="b" data-cx="400" data-cy="150"><circle cx="400" cy="150" r="27" fill="var(--bg2)" stroke="var(--t)" stroke-width="5" stroke-dasharray="4 3.2"/><line x1="376" y1="150" x2="424" y2="150" stroke="var(--t)" stroke-width="1"/></g>
+<g class="gr" data-k="a" data-cx="280" data-cy="330"><circle cx="280" cy="330" r="27" fill="var(--bg2)" stroke="var(--t)" stroke-width="5" stroke-dasharray="4 3.2"/><line x1="280" y1="306" x2="280" y2="354" stroke="var(--t)" stroke-width="1"/></g>
+<g class="gr" data-k="b" data-cx="400" data-cy="330"><circle cx="400" cy="330" r="27" fill="var(--bg2)" stroke="var(--t)" stroke-width="5" stroke-dasharray="4 3.2"/><line x1="376" y1="330" x2="424" y2="330" stroke="var(--t)" stroke-width="1"/></g>
+<rect id="sI" x="332" y="136" width="16" height="28" rx="3" stroke="var(--t)" stroke-width="0.5" fill="var(--bg2)"/>
+<rect id="sE" class="sle" x="332" y="316" width="16" height="28" rx="3" stroke="var(--t)" stroke-width="0.5" fill="#1D9E75" style="transform:translateX(-20px)"/>
+<g class="gr" data-k="w" data-cx="620" data-cy="240"><circle cx="620" cy="240" r="22" fill="none" stroke="var(--t)" stroke-width="6"/><line x1="620" y1="220" x2="620" y2="260" stroke="var(--t)" stroke-width="1.5"/><line x1="600" y1="240" x2="640" y2="240" stroke="var(--t)" stroke-width="1.5"/></g>
+<rect id="cal" x="647" y="228" width="8" height="24" rx="2" fill="var(--t)" opacity=".6"/>
+<text class="ts" x="620" y="284" text-anchor="middle">Wheels</text>
+<g class="c-coral"><rect x="40" y="112" width="120" height="76" rx="8" stroke-width="0.5"/><text class="th" x="100" y="126" text-anchor="middle" dominant-baseline="central">Engine</text><text class="ts" x="100" y="176" text-anchor="middle" dominant-baseline="central">1.6 / 1.8 L</text></g>
+<rect class="pis" x="62" y="140" width="16" height="20" rx="2" fill="#D85A30" opacity=".6"/>
+<rect class="pis" x="92" y="140" width="16" height="20" rx="2" fill="#D85A30" opacity=".6"/>
+<rect class="pis" x="122" y="140" width="16" height="20" rx="2" fill="#D85A30" opacity=".6"/>
+<g id="hsgG" class="c-teal"><circle cx="200" cy="95" r="20" stroke-width="0.5"/><text class="ts" x="200" y="95" text-anchor="middle" dominant-baseline="central">HSG</text></g>
+<g class="gr" data-k="h" data-cx="200" data-cy="95"><circle cx="200" cy="95" r="25" fill="none" stroke="#1D9E75" stroke-width="2" stroke-dasharray="3 5"/></g>
+<g class="c-teal"><rect x="40" y="295" width="120" height="70" rx="8" stroke-width="0.5"/><text class="th" x="100" y="320" text-anchor="middle" dominant-baseline="central">E-motor</text><text class="ts" x="100" y="342" text-anchor="middle" dominant-baseline="central">36 kW, 205 Nm</text></g>
+<g class="c-teal"><rect x="300" y="24" width="120" height="50" rx="8" stroke-width="0.5"/><text class="th" x="360" y="37" text-anchor="middle" dominant-baseline="central">Battery</text><text id="socT" class="ts" x="360" y="52" text-anchor="middle" dominant-baseline="central">60%</text></g>
+<rect x="314" y="62" width="92" height="5" rx="2" fill="var(--bg2)" stroke="var(--t)" stroke-width="0.5"/>
+<rect id="socB" x="314" y="62" width="55" height="5" rx="2" fill="#1D9E75"/>
+<line x1="20" y1="392" x2="40" y2="392" stroke="#D85A30" stroke-width="2.5"/><text class="ts" x="46" y="392" dominant-baseline="central">Engine torque</text>
+<line x1="150" y1="392" x2="170" y2="392" stroke="#1D9E75" stroke-width="2.5"/><text class="ts" x="176" y="392" dominant-baseline="central">Electric power and torque</text>
+<rect x="352" y="386" width="8" height="12" rx="2" fill="#E24B4A"/><text class="ts" x="366" y="392" dominant-baseline="central">Friction brakes on</text>
+</g>
+<text class="ts" x="85" y="428" text-anchor="middle">Speed</text>
+<path d="M25 520 A60 60 0 0 1 145 520" fill="none" stroke="var(--b)" stroke-width="2"/>
+<g stroke="var(--t)" stroke-width="1"><line x1="33" y1="520" x2="25" y2="520"/><line x1="40" y1="494" x2="33" y2="490"/><line x1="59" y1="475" x2="55" y2="468"/><line x1="85" y1="468" x2="85" y2="460"/><line x1="111" y1="475" x2="115" y2="468"/><line x1="130" y1="494" x2="137" y2="490"/><line x1="137" y1="520" x2="145" y2="520"/></g>
+<text class="ts" x="13" y="520" text-anchor="middle" dominant-baseline="central">0</text>
+<text class="ts" x="23" y="484" text-anchor="middle" dominant-baseline="central">30</text>
+<text class="ts" x="49" y="456" text-anchor="middle" dominant-baseline="central">60</text>
+<text class="ts" x="85" y="448" text-anchor="middle" dominant-baseline="central">90</text>
+<text class="ts" x="121" y="456" text-anchor="middle" dominant-baseline="central">120</text>
+<text class="ts" x="148" y="484" text-anchor="middle" dominant-baseline="central">150</text>
+<text class="ts" x="157" y="520" text-anchor="middle" dominant-baseline="central">180</text>
+<line id="sN" x1="85" y1="520" x2="31" y2="520" stroke="var(--text-accent)" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="85" cy="520" r="5" fill="var(--t)"/>
+<text id="sTx" class="th" x="85" y="548" text-anchor="middle" dominant-baseline="central">0 km/h</text>
+<text class="ts" x="255" y="428" text-anchor="middle">Engine shaft</text>
+<path d="M195 520 A60 60 0 0 1 315 520" fill="none" stroke="var(--b)" stroke-width="2"/>
+<path d="M313 504.5 A60 60 0 0 1 315 520" fill="none" stroke="#E24B4A" stroke-width="3"/>
+<g stroke="var(--t)" stroke-width="1"><line x1="203" y1="520" x2="195" y2="520"/><line x1="210" y1="494" x2="203" y2="490"/><line x1="229" y1="475" x2="225" y2="468"/><line x1="255" y1="468" x2="255" y2="460"/><line x1="281" y1="475" x2="285" y2="468"/><line x1="300" y1="494" x2="307" y2="490"/><line x1="307" y1="520" x2="315" y2="520"/></g>
+<text class="ts" x="183" y="520" text-anchor="middle" dominant-baseline="central">0</text>
+<text class="ts" x="193" y="484" text-anchor="middle" dominant-baseline="central">1</text>
+<text class="ts" x="219" y="458" text-anchor="middle" dominant-baseline="central">2</text>
+<text class="ts" x="255" y="448" text-anchor="middle" dominant-baseline="central">3</text>
+<text class="ts" x="291" y="458" text-anchor="middle" dominant-baseline="central">4</text>
+<text class="ts" x="317" y="484" text-anchor="middle" dominant-baseline="central">5</text>
+<text class="ts" x="327" y="520" text-anchor="middle" dominant-baseline="central">6</text>
+<text class="ts" x="255" y="504" text-anchor="middle" dominant-baseline="central">x1000 rpm</text>
+<line id="tgt" x1="255" y1="520" x2="255" y2="520" stroke="var(--t)" stroke-width="3" stroke-dasharray="3 2"/>
+<line id="ndl" x1="255" y1="520" x2="201" y2="520" stroke="#D85A30" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="255" cy="520" r="5" fill="var(--t)"/>
+<text id="dTxt" class="th" x="255" y="548" text-anchor="middle" dominant-baseline="central">Δ 0 rpm</text>
+<text class="ts" x="505" y="428" text-anchor="middle">Dog clutch, seen from the target gear</text>
+<text class="ts" x="362" y="469" text-anchor="end" dominant-baseline="central">Sleeve</text>
+<text class="ts" x="362" y="512" text-anchor="end" dominant-baseline="central">Gear</text>
+<g clip-path="url(#cw)">
+<rect id="sBody" x="370" y="446" width="270" height="10" fill="#D85A30" opacity=".35"/>
+<g id="sT"></g><g id="gTe"></g>
+<rect x="370" y="524" width="270" height="16" fill="#888780" opacity=".4"/>
+</g>
+<rect id="win" x="370" y="440" width="270" height="100" rx="8" fill="none" stroke="var(--b)" stroke-width="1.5"/>
+<text id="st" class="ts" x="505" y="558" text-anchor="middle" dominant-baseline="central"></text>
+<line x1="185" y1="588" x2="205" y2="588" stroke="#D85A30" stroke-width="2.5"/><text class="ts" x="211" y="588" dominant-baseline="central">Engine shaft</text>
+<line x1="305" y1="588" x2="325" y2="588" stroke="var(--t)" stroke-width="3" stroke-dasharray="3 2"/><text class="ts" x="331" y="588" dominant-baseline="central">Speed the selected engine gear needs</text>
+</svg>
+
+<div class="readouts">
+<div class="rd accent"><span>Software</span><b id="rM">Stopped</b></div>
+<div class="rd"><span>Engine</span><b id="rI">Off</b></div>
+<div class="rd"><span>HSG</span><b id="rH">Off</b></div>
+<div class="rd"><span>E-motor</span><b id="rE">Idle</b></div>
+<div class="rd"><span>Gears eng / e</span><b id="rG">N / 1</b></div>
+<div class="rd"><span>Brakes</span><b id="rB">Off</b></div>
+</div>
+<p id="desc"></p>
+
+<div class="row">
+<label for="acc" style="min-width:84px">Accelerator</label>
+<input type="range" id="acc" min="0" max="100" step="1" value="0">
+<span id="accO">0%</span>
+<button id="lift">Lift off</button>
+</div>
+<div class="row">
+<button id="brk">Hold to brake</button>
+<span class="lbl" style="margin-left:6px">Regen paddles</span>
+<button id="rm" aria-label="Less regen">−</button>
+<span class="pips"><i class="pip"></i><i class="pip"></i><i class="pip"></i></span>
+<button id="rp" aria-label="More regen">+</button>
+<span id="rl">Level 1</span>
+<label class="check"><input type="checkbox" id="slow" checked> Slow-motion shifts</label>
+</div>
+</section>
+
+<h2>Things to try</h2>
+<ul>
+<li>Gentle throttle (20–30%): the car stays electric up to roughly 70–80 km/h.</li>
+<li>Floor it from a standstill: it launches on the e-motor, then around 20 km/h the HSG cranks the engine, matches it to gear 1 and the dog clutch engages. Every upshift repeats the sync.</li>
+<li>Cruise above 80 km/h on light throttle: the engine drives and the HSG recharges the battery.</li>
+<li>Drain the battery in EV: below about 28% the software forces series hybrid at low speed and engine + recharge above it, until the battery is back over 40%.</li>
+<li>Lift off at different paddle levels: 0 coasts with everything decoupled, 1 to 3 give stronger regen. The brake uses regen first and the friction brakes cover the rest.</li>
+</ul>
+
+<h2>What's simplified</h2>
+<p>The decision rules approximate how the E-Tech energy manager behaves. They aren't Renault's calibration. Gear ratios, rpm values, battery rates and paddle strengths are illustrative, and the HSG's overshoot during sync is exaggerated so you can see it. The real dogbox has more dog clutches and gear pairs than the one sleeve per shaft drawn here, and the e-motor's own two-speed shift isn't animated in detail.</p>
+
+<h2>Sources</h2>
+<ul>
+<li><a href="https://www.renaultgroup.com/en/magazine/our-group-news/the-dogbox-a-key-choice-for-renault-e-tech-full-hybrid-powertrains/">The dogbox, a key choice for Renault E-Tech full hybrid powertrains (Renault Group)</a></li>
+<li><a href="https://www.renaultgroup.com/en/magazine/our-group-news/the-origins-of-e-tech-technology-4th-episode">The origins of E-Tech technology, episode 4 (Renault Group)</a></li>
+<li><a href="https://media.renault.com/?p=53305">Lego plus a touch of boldness, episode 2 (Renault media)</a></li>
+<li><a href="https://www.automotiveworld.com/news/renault-two-new-generation-full-hybrid-powertrains-on-the-road-with-symbioz-and-espace/">New-generation full hybrid powertrains (Automotive World)</a></li>
+</ul>
+
+<footer>Unofficial educational model, not affiliated with or endorsed by Renault. Source on <a href="https://github.com/CristianSitov/etech-hybrid-sim">GitHub</a>.</footer>
+</main>
+<script src="js/sim.js" defer></script>
+</body>
+</html>
